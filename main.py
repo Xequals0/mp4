@@ -61,7 +61,7 @@ def _load_label_file(filename, n):
     return labels
 
 '''
-Helper function for prting an image
+Helper function for printing an image
 '''
 def _print_digit_image(data):
     for row in range(len(data)):

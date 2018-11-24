@@ -13,8 +13,16 @@ forground (part of the digit)
 def extract_basic_features(digit_data, width, height):
     features=[]
     # Your code starts here #
+    for row in range(height):
+        features.append([]);
+        for column in range(width):
+            print("row: " + str(row) + "\tcolumn: " + str(column) + "\nwidth: " + str(width) + "\theight: " + str(height))
+            if(digit_data[row][column] == '#' or digit_data[row][column] == '+'):
+                features[row].append(True)
+            else:
+                features[row].append(False)
     # Your code ends here #
-    _raise_not_defined()
+    #_raise_not_defined()
     return features
 
 '''
