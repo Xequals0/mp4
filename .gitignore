@@ -1,0 +1,6 @@
+/dist/
+/build/
+/nbproject/
+.DS_Store
+manifest.mf
+build.xml
