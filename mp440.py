@@ -1,3 +1,6 @@
+#Global variables
+computedStatistics = null
+
 '''
 Raise a "not defined" exception as a reminder 
 '''
@@ -58,8 +61,37 @@ should be used for training.
 '''
 def compute_statistics(data, label, width, height, feature_extractor, percentage=1.0):
     # Your code starts here #
+    global computedStatistics
+
+    #Get percentage of data
+    partialDataSize = int(len(data)*percentage)
+    partialData = data[0:modifiedDataSize]
+
+    #Calculate prior distribution
+    numberOccurrence = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    priorDistribution = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    dataSize = len(data)
+
+    for number in label:
+        numberOccurrence[number] += 1.0
+
+    int index = 0
+    for occurrenceCount in numberOccurrence:
+        priorDistribution[index] = numberOccurrence / dataSize
+
+    #Calculate conditional distribution
+    #Possibly need to calculate this in for loop below for each individual image?
+        
+
+    for image in partialData:
+        extractedFeatures = feature_extractor(image, width, height)
+
+        
+
+    
+
     # Your code ends here #
-    _raise_not_defined()
+    #_raise_not_defined()
 
 '''
 For the given features for a single digit image, compute the class 
