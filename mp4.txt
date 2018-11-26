@@ -1,8 +1,0 @@
-mp4.txt
-Note: may want to copy/paste this to a Google Docs later
-
-1b)
-	Some of the drawbacks of using the standard multiplicative representation of joint probability include using very large amounts of
-	memory, requesting excessive resources to handle the computations needed and needing a ridiculous amount of data to make the calculations needed. The probability distributions of all the pixels in each image would be needed, then the product of many of those probabilities would need to be calculated and the process repeated.
-
-Next question here
