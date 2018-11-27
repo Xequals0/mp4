@@ -1,7 +1,7 @@
 import numpy as np
 
 #Global variables
-computedStatistics = null
+computedStatistics = None
 
 '''
 Raise a "not defined" exception as a reminder 
@@ -21,7 +21,7 @@ def extract_basic_features(digit_data, width, height):
     for row in range(height):
         features.append([]);
         for column in range(width):
-            print("row: " + str(row) + "\tcolumn: " + str(column) + "\nwidth: " + str(width) + "\theight: " + str(height))
+            #print("row: " + str(row) + "\tcolumn: " + str(column) + "\nwidth: " + str(width) + "\theight: " + str(height))
             if(digit_data[row][column] == '#' or digit_data[row][column] == '+'):
                 features[row].append(True)
             else:
@@ -65,7 +65,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     global computedStatistics
 
     #k = smoothing factor. Currently choosing arbitrary k
-    k = 1.0
+    k = 3.0
     #Get percentage of data
     partialDataSize = int(len(data)*percentage)
     partialData = data[0:partialDataSize]
@@ -85,7 +85,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Reset index counter
     index = 0
     for occurrenceCount in numberOccurrence:
-        priorDistribution[index] = (k + numberOccurrence) / (k + dataSize)
+        priorDistribution[index] = (k + occurrenceCount) / (k + dataSize)
         index += 1
     priorDistribution = np.log(priorDistribution)
 
@@ -95,7 +95,8 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Go through numbers 0 to 9, get and store number of times number occurs in data set
     for number in indexLists:
         numberInstanceCount = len(number)
-        trueCount = np.zeros(len(data[number[0]]),len(data[number[0]]))
+        
+        trueCount = np.zeros((len(data[number[0]]), len(data[number[0]])))
 
         #Go through each instance of a number (e.g. all 1's)
         for instanceIndex in number:
@@ -111,7 +112,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
                         trueCount[row][column] += 1
 
         #Calculate smoothed conditional probabilities of each pixel for this number
-        conditionalProbabilities = np.zeros(len(trueCount), len(trueCount))
+        conditionalProbabilities = np.zeros((len(trueCount), len(trueCount)))
         for row in range(0, len(conditionalProbabilities)):
             for column in range(0, len(conditionalProbabilities[row])):
                 conditionalProbabilities[row][column] = (k + trueCount[row][column]) / (k + numberInstanceCount)
@@ -121,6 +122,10 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Should now have list of 2D arrays containing smoothed conditional probabilities for each pixel for each number in conditionalProbabilitiesList
 
     computedStatistics = [priorDistribution, conditionalProbabilitiesList]
+    
+    print
+    print "Printing computedStatistics"
+    print str(computedStatistics)
     # Your code ends here #
     #_raise_not_defined()
     return
