@@ -27,7 +27,6 @@ def extract_basic_features(digit_data, width, height):
             else:
                 features[row].append(False)
     # Your code ends here #
-    #_raise_not_defined()
     return features
 
 '''
@@ -65,17 +64,19 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     # Your code starts here #
     global computedStatistics
 
+    #k = smoothing factor. Currently choosing arbitrary k
+    k = 1.0
     #Get percentage of data
     partialDataSize = int(len(data)*percentage)
     partialData = data[0:partialDataSize]
 
-    #Calculate prior distribution and store indices of each occurrence of each number in indexLists
+    #Calculate smoothed prior distribution and store indices of each occurrence of each number in indexLists
     numberOccurrence = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     priorDistribution = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     indexLists = [[], [], [], [], [], [], [], [], [], []]
     dataSize = len(data)
 
-    int index = 0
+    index = 0
     for number in label:
         numberOccurrence[number] += 1.0
         indexLists[number].append(index)
@@ -84,8 +85,9 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Reset index counter
     index = 0
     for occurrenceCount in numberOccurrence:
-        priorDistribution[index] = numberOccurrence / dataSize
+        priorDistribution[index] = (k + numberOccurrence) / (k + dataSize)
         index += 1
+    priorDistribution = np.log(priorDistribution)
 
     #Calculate conditional distribution
     conditionalProbabilitiesList = [[], [], [], [], [], [], [], [], [], []]
@@ -108,20 +110,20 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
                     if(extractedFeatures[row][column]):
                         trueCount[row][column] += 1
 
-        #Calculate conditional probabilities of each pixel for this number
+        #Calculate smoothed conditional probabilities of each pixel for this number
         conditionalProbabilities = np.zeros(len(trueCount), len(trueCount))
         for row in range(0, len(conditionalProbabilities)):
             for column in range(0, len(conditionalProbabilities[row])):
-                conditionalProbabilities[row][column] = trueCount[row][column] / numberInstanceCount
+                conditionalProbabilities[row][column] = (k + trueCount[row][column]) / (k + numberInstanceCount)
         #Now have 2D array for conditional probabilities of each pixel for a number
+        conditionalProbabilities = np.log(conditionalProbabilities)
         conditionalProbabilitiesList[cplIndex] = conditionalProbabilities
+    #Should now have list of 2D arrays containing smoothed conditional probabilities for each pixel for each number in conditionalProbabilitiesList
 
-    #Should now have list of 2D arrays containing conditional probabilities for each pixel for each number in conditionalProbabilitiesList
-    #TODO: Apply smoothing by modifying code above
-
-
+    computedStatistics = [priorDistribution, conditionalProbabilitiesList]
     # Your code ends here #
     #_raise_not_defined()
+    return
 
 '''
 For the given features for a single digit image, compute the class 
