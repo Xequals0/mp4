@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 #Global variables
 computedStatistics = None
@@ -21,8 +22,7 @@ def extract_basic_features(digit_data, width, height):
     for row in range(height):
         features.append([]);
         for column in range(width):
-            #print("row: " + str(row) + "\tcolumn: " + str(column) + "\nwidth: " + str(width) + "\theight: " + str(height))
-            if(digit_data[row][column] == '#' or digit_data[row][column] == '+'):
+            if(digit_data[row][column] == '#' or digit_data[row][column] == '+' or digit_data[row][column] == 1 or digit_data[row][column] == 2):
                 features[row].append(True)
             else:
                 features[row].append(False)
@@ -65,7 +65,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     global computedStatistics
 
     #k = smoothing factor. Currently choosing arbitrary k
-    k = 3.0
+    k = 1.0
     #Get percentage of data
     partialDataSize = int(len(data)*percentage)
     partialData = data[0:partialDataSize]
@@ -78,7 +78,10 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
 
     index = 0
     for number in label:
+        #print "NUMBER: " + str(number)
         numberOccurrence[number] += 1.0
+        #checkStr = "numberOccurrence[{}]: {}".format(number, numberOccurrence[number])
+        #print checkStr
         indexLists[number].append(index)
         index += 1
 
@@ -88,14 +91,17 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
         priorDistribution[index] = (k + occurrenceCount) / (k + dataSize)
         index += 1
     priorDistribution = np.log(priorDistribution)
-
+    #print "Prior Distribution: " + str(priorDistribution)
+    #time.sleep(2)
     #Calculate conditional distribution
     conditionalProbabilitiesList = [[], [], [], [], [], [], [], [], [], []]
     cplIndex = 0
     #Go through numbers 0 to 9, get and store number of times number occurs in data set
     for number in indexLists:
+        #print "NUMBER: " + str(number)
         numberInstanceCount = len(number)
-        
+        #print 
+        #print "NUMBER INSTANCE COUNT: " + str(numberInstanceCount)
         trueCount = np.zeros((len(data[number[0]]), len(data[number[0]])))
 
         #Go through each instance of a number (e.g. all 1's)
@@ -103,22 +109,29 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
             pixelInstanceCount = 0
             #Get image object
             numberImage = data[instanceIndex]
+            #print "numberImage: " + str(numberImage)
             extractedFeatures = feature_extractor(numberImage, width, height)
-
+            #print "extracted Features: " + str(extractedFeatures)
             #Go through each pixel in the image and increment trueCount if it is a feature
             for row in range(0, len(extractedFeatures)):
                 for column in range(0, len(extractedFeatures[row])):
                     if(extractedFeatures[row][column]):
                         trueCount[row][column] += 1
+            #print "TRUECOUNT: " + str(trueCount)
+            #time.sleep(5)
 
         #Calculate smoothed conditional probabilities of each pixel for this number
         conditionalProbabilities = np.zeros((len(trueCount), len(trueCount)))
         for row in range(0, len(conditionalProbabilities)):
             for column in range(0, len(conditionalProbabilities[row])):
                 conditionalProbabilities[row][column] = (k + trueCount[row][column]) / (k + numberInstanceCount)
+        #print
+        #print "CP[0][0]: " + str(conditionalProbabilities[0][0])
+        #print
         #Now have 2D array for conditional probabilities of each pixel for a number
         conditionalProbabilities = np.log(conditionalProbabilities)
         conditionalProbabilitiesList[cplIndex] = conditionalProbabilities
+        cplIndex += 1
     #Should now have list of 2D arrays containing smoothed conditional probabilities for each pixel for each number in conditionalProbabilitiesList
 
     computedStatistics = [priorDistribution, conditionalProbabilitiesList]
@@ -126,6 +139,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     print
     print "Printing computedStatistics"
     print str(computedStatistics)
+    
     # Your code ends here #
     #_raise_not_defined()
     return
