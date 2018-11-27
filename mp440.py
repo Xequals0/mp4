@@ -117,7 +117,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
         conditionalProbabilitiesList[cplIndex] = conditionalProbabilities
 
     #Should now have list of 2D arrays containing conditional probabilities for each pixel for each number in conditionalProbabilitiesList
-
+    #TODO: Apply smoothing by modifying code above
 
 
     # Your code ends here #
