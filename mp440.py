@@ -65,7 +65,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     global computedStatistics
 
     #k = smoothing factor. Currently choosing arbitrary k
-    k = 1.0
+    k = 0.01
     #Get percentage of data
     partialDataSize = int(len(data)*percentage)
     partialData = data[0:partialDataSize]
