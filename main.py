@@ -104,9 +104,11 @@ if __name__ == "__main__":
         DATA_WIDTH, DATA_HEIGHT)
 
     # Compute parameters for a Naive Bayes classifier using the basic feature
-    # extractor 
+    # extractor
+    #100%
     mp.compute_statistics(ALL_TRAINING_IMAGES, ALL_TRAINING_LABELS, DATA_WIDTH,
         DATA_HEIGHT, mp.extract_basic_features)
+
 
     # Making predictions on validation data 
     predicted_labels = mp.classify(ALL_VALIDATION_IMAGES, DATA_WIDTH, DATA_HEIGHT,

@@ -78,6 +78,8 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
 
     index = 0
     for number in label:
+        if(index >= partialDataSize):
+            break
         numberOccurrence[number] += 1.0
         indexLists[number].append(index)
         index += 1
