@@ -92,16 +92,16 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Calculate conditional distribution
     conditionalProbabilitiesList = [[], [], [], [], [], [], [], [], [], []]
     cplIndex = 0
-    #Go through numbers 0 to 9, get and store number of times number occurs in data set
+    #Go through numbers 0 to 9, get and store number of times number occurs in partial data set
     for number in indexLists:
         numberInstanceCount = len(number)
-        trueCount = np.zeros((len(data[number[0]]), len(data[number[0]])))
+        trueCount = np.zeros((len(partialData[number[0]]), len(partialData[number[0]])))
 
         #Go through each instance of a number (e.g. all 1's)
         for instanceIndex in number:
             pixelInstanceCount = 0
             #Get image object
-            numberImage = data[instanceIndex]
+            numberImage = partialData[instanceIndex]
             extractedFeatures = feature_extractor(numberImage, width, height)
             #Go through each pixel in the image and increment trueCount if it is a feature
             for row in range(0, len(extractedFeatures)):
@@ -140,7 +140,7 @@ def compute_class(features):
     classifierSum = []
 
     #min(computedStatistics[1 (conditional probabilities)][0 (number to look at)][0 (row number)])) should always be the computed statistic of a zero value
-    print str(min(computedStatistics[1][0][0]))
+    #print str(min(computedStatistics[1][0][0]))
     zeroValue = min(computedStatistics[1][0][0])
     priorIndex = 0
 
@@ -176,9 +176,13 @@ def classify(data, width, height, feature_extractor):
     predicted=[]
 
     # Your code starts here #
-
+    element = 0
+    for numberImage in data:
+        print "Working on element " + str(element)
+        extraction = feature_extractor(numberImage, width, height)
+        predicted.append(compute_class(extraction))
+        element += 1
     # Your code ends here #
-    _raise_not_defined()
     return predicted
 
 
