@@ -74,7 +74,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     numberOccurrence = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     priorDistribution = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     indexLists = [[], [], [], [], [], [], [], [], [], []]
-    dataSize = len(data)
+    dataSize = len(partialData)
 
     index = 0
     for number in label:
@@ -121,10 +121,11 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     #Should now have list of 2D arrays containing smoothed conditional probabilities for each pixel for each number in conditionalProbabilitiesList
 
     computedStatistics = [priorDistribution, conditionalProbabilitiesList]
-    
+    '''
     print
     print "Printing computedStatistics"
     print str(computedStatistics)
+    '''
     # Your code ends here #
     return
 
@@ -133,11 +134,37 @@ For the given features for a single digit image, compute the class
 '''
 def compute_class(features):
     predicted = -1
-
+    #features is the list of lists of True/False that represent the number image
     # Your code starts here #
-    # Your code ends here #
-    _raise_not_defined()
+    global computedStatistics
+    classifierSum = []
 
+    #min(computedStatistics[1 (conditional probabilities)][0 (number to look at)][0 (row number)])) should always be the computed statistic of a zero value
+    print str(min(computedStatistics[1][0][0]))
+    zeroValue = min(computedStatistics[1][0][0])
+    priorIndex = 0
+
+    for number in computedStatistics[1]:
+        sumCp = computedStatistics[0][priorIndex]
+        row = 0
+        for rowElement in number:
+            column = 0
+            for columnElement in rowElement:
+                if(features[row][column] == 0):
+                    oneProbability = np.exp(columnElement)
+                    zeroProbability = 1 - oneProbability
+                    loggedZeroProbability = np.log(zeroProbability)
+                    sumCp += loggedZeroProbability
+                else:
+                    sumCp += columnElement
+                column += 1
+            row += 1
+        classifierSum.append(sumCp)
+        priorIndex += 1
+    
+    maxP = max(classifierSum)
+    predicted = classifierSum.index(maxP)
+    # Your code ends here #
     return predicted
 
 '''
@@ -145,12 +172,13 @@ Compute joint probaility for all the classes and make predictions for a list
 of data
 '''
 def classify(data, width, height, feature_extractor):
-
+    #Calls compute_class
     predicted=[]
 
     # Your code starts here #
 
     # Your code ends here #
+    _raise_not_defined()
     return predicted
 
 

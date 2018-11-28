@@ -5,3 +5,4 @@
 manifest.mf
 build.xml
 test.py
+play.py
