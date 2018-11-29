@@ -37,30 +37,56 @@ Extract advanced features that you will come up with
 def extract_advanced_features(digit_data, width, height):
     features = []
     rowIsEmpty = 0
+    pixelBlock = 0
+    foundHole = 0
+    topHole = 0
+    bottomHole = 0
     for row in range(height):
         features.append([]);
         print
         "Features after append in row: " + str(features)
         if (row > 0):
             for column in range(width):
-                if (digit_data[row - 1][column] != '#' or digit_data[row][column] != '+' or digit_data[row][
-                    column] != 1 or digit_data[row][column] != 2):
+                if (digit_data[row - 1][column] != '#' or digit_data[row - 1][column] != '+' or digit_data[row - 1][
+                    column] != 1 or digit_data[row - 1][column] != 2):
                     print
                     "Features after insert in column: " + str(features)
                     rowIsEmpty = 1
                 else:
                     rowIsEmpty = 0
         for column in range(width):
-            if (rowIsEmpty == 1 and (
-                    digit_data[row][column] == '#' or digit_data[row][column] == '+' or digit_data[row][column] == 1 or
+            if (rowIsEmpty == 1 and (digit_data[row][column] == '#' or digit_data[row][column] == '+' or digit_data[row][column] == 1 or
                     digit_data[row][column] == 2)):
                 features[row].append(4)
-                print
-                "Features after append in column again: " + str(features)
+            if (digit_data[row][column] == '#' or digit_data[row][column] == '+' or digit_data[row][column] == 1 or digit_data[row][column] == 2):
+                pixelBlock += 1
+            if(pixelBlock > 0 and (digit_data[row][column] != '#' or digit_data[row][column] != '+' or digit_data[row][column] != 1 or digit_data[row][column] != 2)):
+                foundHole += 1
+            if(pixelBlock > 0 and foundHole > 0):
+                if(row < height/2):
+                    topHole = 1
+                if(row >= height/2):
+                    bottomHole = 1
+                pixelBlock = 0
+                foundHole = 0
+            if(topHole > 0 and bottomHole > 0):
+                features[row].append(8)
+                topHole = 0
+                bottomHole = 0
+                break
+            if (topHole == 0 and bottomHole > 0):
+                features[row].append(6)
+                topHole = 0
+                bottomHole = 0
+                break
+            if (topHole > 0 and bottomHole == 0):
+                features[row].append(9)
+                topHole = 0
+                bottomHole = 0
+                break
             else:
                 features[row].append(0)
-                print
-                "Features after append in column again else statement: " + str(features)
+
     '''
     for row in range(height / 2):
         print "row no." + str(row)
@@ -199,7 +225,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
                 for row in range(0, len(extractedFeatures)):
                     for column in range(0, len(extractedFeatures[row])):
                         if(extractedFeatures[row][column] >= 0):
-                            trueCount[row][column] += extractedFeatures[row][column]
+                            trueCount[row][column] += extractedFeatures[row][column] + 1
 
 
 
