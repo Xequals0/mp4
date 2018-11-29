@@ -34,9 +34,60 @@ Extract advanced features that you will come up with
 '''
 def extract_advanced_features(digit_data, width, height):
     features=[]
-    # Your code starts here #
-    # Your code ends here #
-    _raise_not_defined()
+    for row in range(height/2):
+        features.append([]);
+        width = 0
+        innerCounter = 0
+        rowCounter = 0
+        if (digit_data[row][column] == '#' and digit_data[row][column + 1] == '+'):
+            for column in range(width):
+                innerCounter += 1
+                x = row
+                if (digit_data[row][column] == '+' and digit_data[row][column + 1] == 0 and digit_data[row][column + 2] == 0):
+                    for x in range (height/2):
+                        if(digit_data[0][column] != '0' and digit_data[x][column] == 0):
+                            rowCounter += 1
+                        else:
+                            break
+                    break
+            if (innerCounter > 0 and rowCounter > 0):
+                topHole = 1
+                features[row].append(9)
+                break
+            else:
+                topHole = 0
+                features[row].append(0)
+
+
+    for row in range(height/2, height):
+        features.append([]);
+        width = 0
+        innerCounter = 0
+        rowCounter = 0
+        if (digit_data[row][column] == '#' and digit_data[row][column + 1] == '+'):
+            for column in range(width):
+                innerCounter += 1
+                x = row
+                if (digit_data[row][column] == '+' and digit_data[row][column + 1] == 0 and digit_data[row][
+                    column + 2] == 0):
+                    for x in range(height / 2, height):
+                        if (digit_data[0][column] != '0' and digit_data[x][column] == 0):
+                            rowCounter += 1
+                        else:
+                            break
+                    break
+            if (innerCounter > 0 and rowCounter > 0):
+                bottomHole = 1
+                if(topHole == 1):
+                    features[row].append(8)
+                else:
+                    features[row].append(6)
+                break
+            else:
+                bottomHole = 0
+                features[row].append(0)
+
+
     return features
 
 '''
