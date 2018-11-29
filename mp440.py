@@ -39,7 +39,7 @@ def extract_advanced_features(digit_data, width, height):
         width = 0
         innerCounter = 0
         rowCounter = 0
-        if (digit_data[row][column] == '#' and digit_data[row][column + 1] == '+'):
+        if (digit_data[row][0] == '#' and digit_data[row][1] == '+'):
             for column in range(width):
                 innerCounter += 1
                 x = row
@@ -64,7 +64,7 @@ def extract_advanced_features(digit_data, width, height):
         width = 0
         innerCounter = 0
         rowCounter = 0
-        if (digit_data[row][column] == '#' and digit_data[row][column + 1] == '+'):
+        if (digit_data[row][0] == '#' and digit_data[row][1] == '+'):
             for column in range(width):
                 innerCounter += 1
                 x = row
