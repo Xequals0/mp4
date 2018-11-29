@@ -32,44 +32,63 @@ def extract_basic_features(digit_data, width, height):
 '''
 Extract advanced features that you will come up with 
 '''
-def extract_advanced_features(digit_data, width, height):
-    features=[]
 
+
+def extract_advanced_features(digit_data, width, height):
+    features = []
+    rowIsEmpty = 0
+    for row in range(height):
+        features.append([]);
+        print
+        "Features after append in row: " + str(features)
+        if (row > 0):
+            for column in range(width):
+                if (digit_data[row - 1][column] != '#' or digit_data[row][column] != '+' or digit_data[row][
+                    column] != 1 or digit_data[row][column] != 2):
+                    print
+                    "Features after insert in column: " + str(features)
+                    rowIsEmpty = 1
+                else:
+                    rowIsEmpty = 0
+        for column in range(width):
+            if (rowIsEmpty == 1 and (
+                    digit_data[row][column] == '#' or digit_data[row][column] == '+' or digit_data[row][column] == 1 or
+                    digit_data[row][column] == 2)):
+                features[row].append(4)
+                print
+                "Features after append in column again: " + str(features)
+            else:
+                features[row].append(0)
+                print
+                "Features after append in column again else statement: " + str(features)
     '''
-    for row in range(height/2):
+    for row in range(height / 2):
+        print "row no." + str(row)
         features.append([]);
         width = 0
         innerCounter = 0
         rowCounter = 0
-<<<<<<< HEAD
-
-        if (digit_data[row][column] == '#' and digit_data[row][column + 1] == '+'):
-=======
-        if (digit_data[row][0] == '#' and digit_data[row][1] == '+'):
->>>>>>> 4e0bd6628e63238b39b2a2372d96f3fdbf920440
+        if (digit_data[row][0] == '#' or digit_data[row][0] == '+'):
             for column in range(width):
-                innerCounter += 1
+                innerCounter = 1
                 x = row
-                if (digit_data[row][column] == '+' and digit_data[row][column + 1] == 0 and digit_data[row][column + 2] == 0):
-                    for x in range (height/2):
-                        if(digit_data[0][column] != '0' and digit_data[x][column] == 0):
-                            rowCounter += 1
-                        else:
-                            break
+                if (digit_data[row][column] == '+' and digit_data[row][column + 1] == '0' and digit_data[row][
+                    column + 2] == '0'):
+                    rowCounter += 1
+                    print " " + str(rowCounter)
                     break
             if (innerCounter > 0 and rowCounter > 0):
                 topHole = 1
+                x = row
                 features[row].append(9)
                 break
             else:
                 topHole = 0
+                x = row
                 features[row].append(0)
-    print "After first loop: "
-    print str(features)
 
 
     for row in range(height/2, height):
-        features.append([]);
         width = 0
         innerCounter = 0
         rowCounter = 0
@@ -95,12 +114,9 @@ def extract_advanced_features(digit_data, width, height):
             else:
                 bottomHole = 0
                 features[row].append(0)
-    print "After second loop: "
-    print str(features)
+
     '''
-
-    #Detect double column for 4
-
+    print str(features)
     return features
 
 '''
@@ -163,7 +179,7 @@ def compute_statistics(data, label, width, height, feature_extractor, percentage
     for number in indexLists:
         numberInstanceCount = len(number)
         dataLength = len(partialData[number[0]])
-        trueCount = np.zeros(dataLength, dataLength)
+        trueCount = np.zeros((dataLength, dataLength))
         #Go through each instance of a number (e.g. all 1's)
         for instanceIndex in number:
             pixelInstanceCount = 0
